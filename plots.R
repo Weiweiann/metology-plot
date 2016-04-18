@@ -106,3 +106,15 @@ p = plot_ly(data,color=data$Age, x=data$BigdataWilling, type="box") %>%
          xaxis =list(title="使用大數據分析是否會增加您自費健檢的意願"))
 p
 plotly_POST(p, filename = "年齡vs大數據分析(Box chart)")
+
+# 願意花多少錢在進階健檢?
+x <- data.frame(Category=willing_pay, 
+                Frequency=rep(1, length(willing_pay)))
+a <- aggregate(Frequency ~ Category, x, sum)
+col = colorRampPalette(brewer.pal(5,"YlGnBu"))(length(levels(willing_pay)))
+p = plot_ly(a, type="pie",values=a$Frequency, sort=FALSE,
+            labels=a$Category,
+            textposition="outside",marker=list(colors=col) ) %>%
+  layout(title = "願意花多少錢在進階健檢?",margin = m)
+p
+plotly_POST(p, filename = "願意花多少錢在進階健檢?(Pie chart)")
