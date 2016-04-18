@@ -118,3 +118,15 @@ p = plot_ly(a, type="pie",values=a$Frequency, sort=FALSE,
   layout(title = "願意花多少錢在進階健檢?",margin = m)
 p
 plotly_POST(p, filename = "願意花多少錢在進階健檢?(Pie chart)")
+
+# 職業分布
+x <- data.frame(Category=job, 
+                Frequency=rep(1, length(job)))
+a <- aggregate(Frequency ~ Category, x, sum)
+col = brewer.pal(11,"Set3")
+p = plot_ly(a, type="pie",values=a$Frequency, sort=FALSE,
+            labels=a$Category,
+            textposition="outside",marker=list(colors=col) ) %>%
+  layout(title = "職業分布",margin = m)
+p
+plotly_POST(p, filename = "職業分布(Pie chart)")
