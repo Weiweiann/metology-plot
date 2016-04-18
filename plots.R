@@ -84,3 +84,25 @@ p = plot_ly(a, type="pie",values=a$Frequency,sort = FALSE,
             textposition="outside",marker=list(colors=col) ) %>%
   layout(title = "使用大數據分析來提供您更加個人化的健檢項目，會增加您自費健檢的意願嗎?",margin = m)
 p
+plotly_POST(p, filename = "大數據分析(Pie chart)")
+
+col = colorRampPalette(brewer.pal(9,"PuBu"))(length(levels(self_estimate)))
+data_no_blank = data_no_student[data_no_student[,6]!="",]
+data = data.frame(SelfEstimate = factor(as.integer(data_no_blank[,6])),
+                  Age = data_no_blank[,3],
+                  BigdataWilling = data_no_blank[,11])
+data = data[order(data$SelfEstimate),]
+
+p = plot_ly(data,color=paste(data$SelfEstimate, "分", sep=""), x=data$BigdataWilling, type="box") %>%
+  layout(title = "自身健康狀態vs使用大數據分析是否會增加您自費健檢的意願",
+         xaxis =list(title="使用大數據分析是否會增加您自費健檢的意願"))
+p
+plotly_POST(p, filename = "自身健康狀態vs大數據分析(Box chart)")
+
+data = data.frame(Age = data_no_student[,3],
+                  BigdataWilling = data_no_student[,11])
+p = plot_ly(data,color=data$Age, x=data$BigdataWilling, type="box") %>%
+  layout(title = "年齡vs使用大數據分析是否會增加您自費健檢的意願",
+         xaxis =list(title="使用大數據分析是否會增加您自費健檢的意願"))
+p
+plotly_POST(p, filename = "年齡vs大數據分析(Box chart)")
