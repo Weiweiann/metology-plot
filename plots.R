@@ -1,5 +1,5 @@
 library(xlsx)
-data = read.xlsx('./Metology-report.xlsx',sheetIndex = 1)
+data = read.xlsx('./Metology-report.xlsx',sheetIndex = 1,encoding = "UTF-8")
 
 # rm ourselves and unimportant columns
 data = data[c(-1:-7),c(-1,-28:-30)]
@@ -35,5 +35,21 @@ ggplot(income_age_data, aes(x = Age, fill=income)) + geom_dotplot(stackgroups = 
 ggplot(income_age_data, aes(x = Age, fill=income)) + geom_bar(position = "fill") + scale_fill_brewer() + theme(text = element_text(family = 'SimSun',size = 18))+xlab("年齡")+ylab("比例")
 
 
+library(plotly)
+library(RColorBrewer)
 
+
+col = colorRampPalette(brewer.pal(9,"PuBu"))(length(levels(HC_quality)))
+x <- data.frame(Category=factor(sort(as.numeric(HC_quality))), 
+                Frequency=as.integer(HC_quality))
+a <- aggregate(Frequency ~ Category, x, sum)
+
+p = plot_ly(a, type="pie",values=a$Frequency,
+        labels=paste(a$Category, "分", sep=""),
+        textposition="outside",marker=list(colors=col) ) %>%
+  layout(title = "對於健檢的滿意度評分")
+p
+Sys.setenv("plotly_username"="l.w.jasons")
+Sys.setenv("plotly_api_key"="n75fpddg16")
+plotly_POST(p, filename = "對於健檢的滿意度評分(Pie chart)")
 
