@@ -37,6 +37,8 @@ ggplot(income_age_data, aes(x = Age, fill=income)) + geom_bar(position = "fill")
 
 library(plotly)
 library(RColorBrewer)
+Sys.setenv("plotly_username"="l.w.jasons")
+Sys.setenv("plotly_api_key"="n75fpddg16")
 
 # 健康檢查的結果，是否能夠準確代表您的身體健康狀態？
 col = colorRampPalette(brewer.pal(9,"PuBu"))(length(levels(HC_quality)))
@@ -56,8 +58,7 @@ p = plot_ly(a, type="pie",values=a$Frequency,sort = FALSE,
         textposition="outside",marker=list(colors=col) ) %>%
   layout(title = "健康檢查的結果，是否能夠準確代表您的身體健康狀態？",margin = m)
 p
-Sys.setenv("plotly_username"="l.w.jasons")
-Sys.setenv("plotly_api_key"="n75fpddg16")
+
 plotly_POST(p, filename = "健康檢查的結果，是否能夠準確代表您的身體健康狀態？(Pie chart)")
 
 # 大數據分析來提供您更加個人化的健檢項目，會增加您自費健檢的意願嗎?
@@ -130,3 +131,21 @@ p = plot_ly(a, type="pie",values=a$Frequency, sort=FALSE,
   layout(title = "職業分布",margin = m)
 p
 plotly_POST(p, filename = "職業分布(Pie chart)")
+
+
+data = data.frame(SelfEstimate = factor(as.integer(data_no_student[,6])),
+                  WillingPay = willing_pay,
+                  BigdataPay = data_no_student[,12],
+                  Frequency=rep(1, length(willing_pay)))
+data = data[data$WillingPay!="0元",]
+data = data[data$BigdataPay!="0元",]
+a <- aggregate(Frequency ~ WillingPay, data, sum)
+col = brewer.pal(11,"RdYlBu")
+
+g = ggplot(data, aes(x=WillingPay, y=BigdataPay)) + geom_point()
+p = ggplotly(g)
+plotly_POST(p, filename = "test")
+plot_ly(data, color=as.integer(data$SelfEstimate),
+        z=as.integer(data$SelfEstimate), x=data$WillingPay, y = data$BigdataPay,type="scatter3d",
+        mode="markers",colors=col) 
+ p
