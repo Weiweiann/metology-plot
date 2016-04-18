@@ -111,7 +111,7 @@ plotly_POST(p, filename = "年齡vs大數據分析(Box chart)")
 x <- data.frame(Category=willing_pay, 
                 Frequency=rep(1, length(willing_pay)))
 a <- aggregate(Frequency ~ Category, x, sum)
-col = colorRampPalette(brewer.pal(5,"YlGnBu"))(length(levels(willing_pay)))
+col = brewer.pal(6,"Pastel2")
 p = plot_ly(a, type="pie",values=a$Frequency, sort=FALSE,
             labels=a$Category,
             textposition="outside",marker=list(colors=col) ) %>%
