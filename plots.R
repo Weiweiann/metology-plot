@@ -38,18 +38,49 @@ ggplot(income_age_data, aes(x = Age, fill=income)) + geom_bar(position = "fill")
 library(plotly)
 library(RColorBrewer)
 
-
+# 健康檢查的結果，是否能夠準確代表您的身體健康狀態？
 col = colorRampPalette(brewer.pal(9,"PuBu"))(length(levels(HC_quality)))
 x <- data.frame(Category=factor(sort(as.numeric(HC_quality))), 
                 Frequency=as.integer(HC_quality))
 a <- aggregate(Frequency ~ Category, x, sum)
 
-p = plot_ly(a, type="pie",values=a$Frequency,
+m = list(
+  l = 100,
+  r = 40,
+  b = 20,
+  t = 100,
+  pad = 0
+)
+p = plot_ly(a, type="pie",values=a$Frequency,sort = FALSE,
         labels=paste(a$Category, "分", sep=""),
         textposition="outside",marker=list(colors=col) ) %>%
-  layout(title = "對於健檢的滿意度評分")
+  layout(title = "健康檢查的結果，是否能夠準確代表您的身體健康狀態？",margin = m)
 p
 Sys.setenv("plotly_username"="l.w.jasons")
 Sys.setenv("plotly_api_key"="n75fpddg16")
-plotly_POST(p, filename = "對於健檢的滿意度評分(Pie chart)")
+plotly_POST(p, filename = "健康檢查的結果，是否能夠準確代表您的身體健康狀態？(Pie chart)")
 
+# 大數據分析來提供您更加個人化的健檢項目，會增加您自費健檢的意願嗎?
+x <- data.frame(Category=bigdata_willing, 
+                Frequency=as.integer(bigdata_willing))
+a <- aggregate(Frequency ~ Category, x, sum)
+plot_ly(a,type="bar", y =a$Frequency, x = paste(a$Category, "分", sep="")) %>%
+  layout(
+    title = "使用大數據分析來提供您更加個人化的健檢項目，會增加您自費健檢的意願嗎?",
+    xaxis = list(title=""),
+    yaxis = list(title="")
+  )
+
+m = list(
+  l = 100,
+  r = 40,
+  b = 20,
+  t = 100,
+  pad = 0
+)
+col = colorRampPalette(brewer.pal(9,"PuBu"))(length(levels(bigdata_willing)))
+p = plot_ly(a, type="pie",values=a$Frequency,sort = FALSE,
+            labels=paste(a$Category, "分", sep=""),
+            textposition="outside",marker=list(colors=col) ) %>%
+  layout(title = "使用大數據分析來提供您更加個人化的健檢項目，會增加您自費健檢的意願嗎?",margin = m)
+p
