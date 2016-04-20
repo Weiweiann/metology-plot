@@ -47,8 +47,12 @@ p1 = ggplot(x_melt, aes(x = value, fill=variable)) + geom_bar(position = positio
 p1
 
 
+x <- data.frame(Wills=willing_pay, Income = income)
 
-
+p1 = ggplot(x, aes(x = Income, fill=Wills)) + geom_bar(position = "fill") +
+  scale_fill_brewer(palette="GnBu", guide = guide_legend(title = NULL)) + 
+  theme_fivethirtyeight(base_family = 'SimSun',base_size = 18)  + xlab("收入") + ylab("比例") + ggtitle("收入與健檢花費意願比較")
+p1
 
 
 
