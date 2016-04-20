@@ -134,18 +134,58 @@ plotly_POST(p, filename = "職業分布(Pie chart)")
 
 
 data = data.frame(SelfEstimate = factor(as.integer(data_no_student[,6])),
+                  Income = income,
                   WillingPay = willing_pay,
                   BigdataPay = data_no_student[,12],
                   Frequency=rep(1, length(willing_pay)))
 data = data[data$WillingPay!="0元",]
 data = data[data$BigdataPay!="0元",]
-a <- aggregate(Frequency ~ WillingPay, data, sum)
+a <- aggregate(Frequency ~ WillingPay+BigdataPay+SelfEstimate , data, sum)
 col = brewer.pal(11,"RdYlBu")
-
 g = ggplot(data, aes(x=WillingPay, y=BigdataPay)) + geom_point()
 p = ggplotly(g)
 plotly_POST(p, filename = "test")
-plot_ly(data, color=as.integer(data$SelfEstimate),
-        z=as.integer(data$SelfEstimate), x=data$WillingPay, y = data$BigdataPay,type="scatter3d",
+p =plot_ly(a, color=as.integer(a$SelfEstimate), size = a$Frequency,
+        z=as.integer(a$SelfEstimate), x=a$WillingPay, y = a$BigdataPay,type="scatter3d",
         mode="markers",colors=col) 
- p
+p
+plotly_POST(p, filename = "test2")
+
+
+data1 = data[data$Income=="10-50萬",]
+data2 = data[data$Income=="50-100萬",]
+data3 = data[data$Income=="100-200萬",]
+a1 <- aggregate(Frequency ~ WillingPay+BigdataPay+SelfEstimate , data1, sum)
+a2 <- aggregate(Frequency ~ WillingPay+BigdataPay+SelfEstimate , data2, sum)
+a3 <- aggregate(Frequency ~ WillingPay+BigdataPay+SelfEstimate , data3, sum)
+
+p1 =plot_ly(a1, color=as.integer(SelfEstimate), size = Frequency,
+           z=as.integer(SelfEstimate), x=WillingPay, y = BigdataPay,type="scatter3d",
+           mode="markers",colors=col) %>%
+  layout(title = "10-50萬")
+plotly_POST(p1, filename = "income1")
+
+p2 =plot_ly(a2, color=as.integer(SelfEstimate), size = Frequency,
+           z=as.integer(SelfEstimate), x=WillingPay, y = BigdataPay,type="scatter3d",
+           mode="markers",colors=col) %>%
+  layout(title = "50-100萬")
+plotly_POST(p2, filename = "income2")
+
+p3 =plot_ly(a3, color=as.integer(SelfEstimate), size = Frequency,
+           z=as.integer(SelfEstimate), x=WillingPay, y = BigdataPay,type="scatter3d",
+           mode="markers",colors=col) %>%
+  layout(title = "100-200萬")
+plotly_POST(p3, filename = "income3")
+
+p = subplot(
+  plot_ly(a1, color=as.integer(SelfEstimate), size = Frequency,
+          z=as.integer(SelfEstimate), x=WillingPay, y = BigdataPay,type="scatter3d",
+          mode="markers",colors=col),
+  plot_ly(a2, color=as.integer(SelfEstimate), size = Frequency,
+          z=as.integer(SelfEstimate), x=WillingPay, y = BigdataPay,type="scatter3d",
+          mode="markers",colors=col),
+  plot_ly(a3, color=as.integer(SelfEstimate), size = Frequency,
+          z=as.integer(SelfEstimate), x=WillingPay, y = BigdataPay,type="scatter3d",
+          mode="markers",colors=col)
+)
+p
